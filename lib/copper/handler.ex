@@ -16,6 +16,8 @@ defmodule Copper.Handler do
 
   def send_201(conn, payload), do: Handler.send_json(conn, 201, payload)
 
+  def send_204(conn), do: Conn.send_resp(conn, 204, [])
+
   def send_400(conn, error), do: Handler.send_message(conn, 400, error)
   def send_400(conn), do: Handler.send_message(conn, 400, "Bad request")
 

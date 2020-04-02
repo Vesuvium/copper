@@ -40,6 +40,14 @@ defmodule CopperTest.Handler do
       assert called(Handler.send_json(:conn, 201, "hello"))
     end
   end
+
+  test "send_204" do
+    dummy Conn, [{"send_resp/3", :resp}] do
+      assert Handler.send_204(:conn) == :resp
+      assert called(Conn.send_resp(:conn, 204, []))
+    end
+  end
+
   test "send_400/2" do
     dummy Handler, [{"send_message/3", :resp}] do
       assert Handler.send_400(:conn, :error) == :resp
