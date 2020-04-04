@@ -20,6 +20,7 @@ defmodule Copper.MixProject do
   defp deps do
     [
       {:credo, "~> 0.9", only: :dev, runtime: false},
+      {:ecto_sql, "~> 3.0"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:dummy, "~> 1.3", only: :test},
       {:jason, "~> 1.1"},
