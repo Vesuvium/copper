@@ -62,6 +62,19 @@ defmodule CopperTest.Handler do
     end
   end
 
+  test "send_401/1" do
+    header = "Bearer realm=\"authenticate\", error=\"invalid_token\""
+    message = "Your credentials are invalid"
+
+    dummy Conn, [{"put_resp_header/3", :header}] do
+      dummy Handler, [{"send_message/3", :message}] do
+        assert Handler.send_401(:conn) == :message
+        assert called(Conn.put_resp_header(:conn, "www-authenticate", header))
+        assert called(Handler.send_message(:header, 401, message))
+      end
+    end
+  end
+
   test "send_403/1" do
     message = "You're not allowed to perform this action"
 

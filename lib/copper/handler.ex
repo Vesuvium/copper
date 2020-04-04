@@ -31,6 +31,15 @@ defmodule Copper.Handler do
   def send_400(conn, error), do: Handler.send_message(conn, 400, error)
   def send_400(conn), do: Handler.send_message(conn, 400, "Bad request")
 
+  def send_401(conn) do
+    conn
+    |> Conn.put_resp_header(
+      "www-authenticate",
+      "Bearer realm=\"authenticate\", error=\"invalid_token\""
+    )
+    |> Handler.send_message(401, "Your credentials are invalid")
+  end
+
   def send_403(conn) do
     Handler.send_message(conn, 403, "You're not allowed to perform this action")
   end
