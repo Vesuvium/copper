@@ -22,6 +22,7 @@ defmodule Copper.Controller do
               __CALLER__.module
               |> Module.split()
               |> List.replace_at(1, "Repo")
+              |> Enum.slice(0..1)
               |> Module.concat()
             )
 
