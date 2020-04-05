@@ -1,4 +1,5 @@
 defmodule Copper.Controller do
+  alias Copper.ModuleUtils
   alias Ecto.{Changeset, Query, Schema}
 
   @callback new(host :: String.t(), params :: %{}) ::
@@ -18,13 +19,7 @@ defmodule Copper.Controller do
 
   defmacro __using__([]) do
     quote do
-      alias unquote(
-              __CALLER__.module
-              |> Module.split()
-              |> List.replace_at(1, "Repo")
-              |> Enum.slice(0..1)
-              |> Module.concat()
-            )
+      alias unquote(ModuleUtils.submodule(__CALLER__.module, "Repo"))
 
       alias unquote(
               __CALLER__.module
