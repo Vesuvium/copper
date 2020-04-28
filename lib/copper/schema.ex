@@ -18,7 +18,7 @@ defmodule Copper.Schema do
 
   defmacro __using__([]) do
     quote do
-      alias unquote(ModuleUtils.submodule(__CALLER__.module, "Repo"))
+      alias unquote(ModuleUtils.slice_replace(__CALLER__.module, "Repo"))
 
       alias Ecto.Changeset
 
