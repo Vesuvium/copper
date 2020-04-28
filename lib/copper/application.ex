@@ -12,9 +12,11 @@ defmodule Copper.Application do
             )
 
       def start(_type, _args) do
-        repo = unquote(Utils.submodule(__CALLER__.module, "Repo"))
-        router = unquote(Utils.submodule(__CALLER__.module, "Router"))
-        supervisor = unquote(Utils.submodule(__CALLER__.module, "Supervisor"))
+        repo = unquote(Utils.slice_replace(__CALLER__.module, "Repo"))
+        router = unquote(Utils.slice_replace(__CALLER__.module, "Router"))
+
+        supervisor =
+          unquote(Utils.slice_replace(__CALLER__.module, "Supervisor"))
 
         children = [
           repo,
