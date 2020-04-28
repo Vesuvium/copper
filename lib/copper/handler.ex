@@ -1,5 +1,6 @@
 defmodule Copper.Handler do
   alias Copper.Handler
+  alias Copper.ModuleUtils
   alias Plug.Conn
 
   @callback get(conn :: Conn.t()) :: Conn.t() | no_return
@@ -54,12 +55,7 @@ defmodule Copper.Handler do
 
   defmacro __using__([]) do
     quote do
-      alias unquote(
-              __CALLER__.module
-              |> Module.split()
-              |> List.replace_at(1, "Controllers")
-              |> Module.concat()
-            )
+      alias unquote(ModuleUtils.replace_at(__CALLER__.module, "Controllers"))
 
       alias Plug.Conn
 
