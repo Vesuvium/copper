@@ -19,14 +19,8 @@ defmodule Copper.Controller do
 
   defmacro __using__([]) do
     quote do
-      alias unquote(ModuleUtils.submodule(__CALLER__.module, "Repo"))
-
-      alias unquote(
-              __CALLER__.module
-              |> Module.split()
-              |> List.replace_at(1, "Schemas")
-              |> Module.concat()
-            )
+      alias unquote(ModuleUtils.slice_replace(__CALLER__.module, "Repo"))
+      alias unquote(ModuleUtils.replace_at(__CALLER__.module, "Schemas"))
 
       @behaviour Copper.Controller
     end
