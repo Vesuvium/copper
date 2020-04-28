@@ -12,7 +12,7 @@ defmodule Copper.ModuleUtils do
   end
 
   @doc """
-  Replaces a fragment of a module name, e.g App.Controller.My -> App.Schemas.My
+  Replaces a fragment of a module name, e.g App.Controllers.My -> App.Schemas.My
 
   The default index is 1.
   """
@@ -20,6 +20,17 @@ defmodule Copper.ModuleUtils do
     module
     |> Module.split()
     |> List.replace_at(index, replacement)
+    |> Module.concat()
+  end
+
+  @doc """
+  Replaces and slices a module name, e.g App.Controllers.My -> App.Repo
+  """
+  def slice_replace(module, replacement, index \\ 1) do
+    module
+    |> Module.split()
+    |> List.replace_at(index, replacement)
+    |> Enum.slice(0, 2)
     |> Module.concat()
   end
 end
