@@ -27,4 +27,20 @@ defmodule CopperTest.ModuleUtils do
       end
     end
   end
+
+  test "replace_at/2" do
+    dummy Module, [{"concat", :concat}, {"split", ["App", "Module"]}] do
+      assert ModuleUtils.replace_at("App.Module", "Another") == :concat
+      assert called(Module.split("App.Module"))
+      assert called(Module.concat(["App", "Another"]))
+    end
+  end
+
+  test "replace_at/3" do
+    dummy Module, [{"concat", :concat}, {"split", ["App", "Module"]}] do
+      assert ModuleUtils.replace_at("App.Module", "Another", 0) == :concat
+      assert called(Module.split("App.Module"))
+      assert called(Module.concat(["Another", "Module"]))
+    end
+  end
 end

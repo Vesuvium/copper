@@ -10,4 +10,16 @@ defmodule Copper.ModuleUtils do
   def submodule(module, submodule) do
     Module.concat([ModuleUtils.name(module), submodule])
   end
+
+  @doc """
+  Replaces a fragment of a module name, e.g App.Controller.My -> App.Schemas.My
+
+  The default index is 1.
+  """
+  def replace_at(module, replacement, index \\ 1) do
+    module
+    |> Module.split()
+    |> List.replace_at(index, replacement)
+    |> Module.concat()
+  end
 end
