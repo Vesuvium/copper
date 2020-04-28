@@ -7,10 +7,6 @@ defmodule Copper.ModuleUtils do
     module |> ModuleUtils.name() |> String.downcase() |> String.to_atom()
   end
 
-  def submodule(module, submodule) do
-    Module.concat([ModuleUtils.name(module), submodule])
-  end
-
   @doc """
   Replaces a fragment of a module name, e.g App.Controllers.My -> App.Schemas.My
 
