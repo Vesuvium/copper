@@ -92,4 +92,13 @@ defmodule CopperTest.Handler do
       assert called(Handler.send_message(:conn, 404, message))
     end
   end
+
+  test "send_501/1" do
+    message = "This endpoint is not implemented yet"
+
+    dummy Handler, [{"send_message/3", :resp}] do
+      assert Handler.send_501(:conn) == :resp
+      assert called(Handler.send_message(:conn, 501, message))
+    end
+  end
 end
