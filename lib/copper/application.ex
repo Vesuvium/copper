@@ -1,15 +1,14 @@
 defmodule Copper.Application do
   alias Copper.ModuleUtils, as: Utils
 
-  defmacro __using__([]) do
+  defmacro __using__(opts \\ []) do
     quote do
       use Application
       require Logger
 
-      @port Application.get_env(
-              unquote(Utils.atom_name(__CALLER__.module)),
-              :port
-            )
+      name = unquote(opts[:name]) || unquote(Utils.atom_name(__CALLER__.module))
+
+      @port Application.get_env(name, :port)
 
       def start(_type, _args) do
         repo = unquote(Utils.slice_replace(__CALLER__.module, "Repo"))
