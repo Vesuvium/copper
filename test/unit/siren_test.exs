@@ -25,4 +25,42 @@ defmodule CopperTest.Siren do
       end
     end
   end
+
+  test "add_next/3" do
+    conn = %{query_params: %{"page" => "2"}}
+    expected = [%{"rel" => "next", "href" => :page}]
+
+    dummy Siren, [{"change_page/2", :page}] do
+      assert Siren.add_next([], conn, 100) == expected
+      assert called(Siren.change_page(conn, 3))
+    end
+  end
+
+  test "add_next/3 without a given page" do
+    conn = %{query_params: %{}}
+
+    dummy Siren, [{"change_page/2", :page}] do
+      Siren.add_next([], conn, 100)
+      assert called(Siren.change_page(conn, 2))
+    end
+  end
+
+  test "add_next/3 with items * page > count" do
+    conn = %{query_params: %{"items" => "200"}}
+
+    assert Siren.add_next([], conn, 100) == []
+  end
+
+  test "add_next/3 with items * page < count" do
+    conn = %{query_params: %{"items" => "1"}}
+    expected = [%{"rel" => "next", "href" => :page}]
+
+    dummy Siren, [{"change_page/2", :page}] do
+      assert Siren.add_next([], conn, 100) == expected
+    end
+  end
+
+  test "add_next/3 on last page" do
+    assert Siren.add_next([], %{query_params: %{"page" => "5"}}, 100) == []
+  end
 end
