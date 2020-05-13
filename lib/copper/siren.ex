@@ -74,4 +74,8 @@ defmodule Copper.Siren do
       "links" => Siren.links(conn, count)
     }
   end
+
+  def encode(conn, payload) do
+    %{"properties" => payload, "links" => Siren.add_self([], conn)}
+  end
 end
