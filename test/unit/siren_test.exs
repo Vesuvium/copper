@@ -108,4 +108,13 @@ defmodule CopperTest.Siren do
       assert called(Siren.links(:conn, :count))
     end
   end
+
+  test "encode/2" do
+    expected = %{"properties" => :payload, "links" => [:self]}
+
+    dummy Siren, [{"add_self/2", [:self]}] do
+      assert Siren.encode(:conn, :payload) == expected
+      assert called(Siren.add_self([], :conn))
+    end
+  end
 end
