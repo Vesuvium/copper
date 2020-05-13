@@ -80,4 +80,10 @@ defmodule CopperTest.Siren do
   test "add_prev/2 without a page" do
     assert Siren.add_prev([], %{query_params: %{}}) == []
   end
+
+  test "add_self/2" do
+    dummy Conn, [{"request_url", :url}] do
+      assert Siren.add_self([], :conn) == [%{"rel" => "self", "href" => :url}]
+    end
+  end
 end
