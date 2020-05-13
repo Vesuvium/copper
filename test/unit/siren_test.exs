@@ -86,4 +86,17 @@ defmodule CopperTest.Siren do
       assert Siren.add_self([], :conn) == [%{"rel" => "self", "href" => :url}]
     end
   end
+
+  test "links/2" do
+    dummy Siren, [
+      {"add_self/2", :self},
+      {"add_prev/2", :prev},
+      {"add_next/3", :next}
+    ] do
+      assert Siren.links(:conn, :count) == :next
+      assert Siren.add_self([], :conn)
+      assert called(Siren.add_prev(:self, :conn))
+      assert called(Siren.add_next(:prev, :conn, :count))
+    end
+  end
 end
