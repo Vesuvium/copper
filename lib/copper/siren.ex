@@ -64,4 +64,14 @@ defmodule Copper.Siren do
     |> Siren.add_prev(conn)
     |> Siren.add_next(conn, count)
   end
+
+  @doc """
+  Encodes a payload to Siren.
+  """
+  def encode(conn, payload, count) do
+    %{
+      "entities" => payload,
+      "links" => Siren.links(conn, count)
+    }
+  end
 end

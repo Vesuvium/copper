@@ -99,4 +99,13 @@ defmodule CopperTest.Siren do
       assert called(Siren.add_next(:prev, :conn, :count))
     end
   end
+
+  test "encode/3" do
+    expected = %{"entities" => :payload, "links" => :links}
+
+    dummy Siren, [{"links/2", :links}] do
+      assert Siren.encode(:conn, :payload, :count) == expected
+      assert called(Siren.links(:conn, :count))
+    end
+  end
 end
