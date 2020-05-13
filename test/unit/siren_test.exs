@@ -63,4 +63,21 @@ defmodule CopperTest.Siren do
   test "add_next/3 on last page" do
     assert Siren.add_next([], %{query_params: %{"page" => "5"}}, 100) == []
   end
+
+  test "add_prev/2" do
+    conn = %{query_params: %{"page" => "2"}}
+
+    dummy Siren, [{"change_page/2", :page}] do
+      assert Siren.add_prev([], conn) == [%{"rel" => "prev", "href" => :page}]
+      assert called(Siren.change_page(conn, 1))
+    end
+  end
+
+  test "add_prev/2 on the first page" do
+    assert Siren.add_prev([], %{query_params: %{"page" => "1"}}) == []
+  end
+
+  test "add_prev/2 without a page" do
+    assert Siren.add_prev([], %{query_params: %{}}) == []
+  end
 end

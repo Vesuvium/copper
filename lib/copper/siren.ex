@@ -38,4 +38,20 @@ defmodule Copper.Siren do
       links
     end
   end
+
+  @doc """
+  Adds a link to the previous page, if it's not the first page.
+  """
+  def add_prev(links, %{query_params: %{"page" => current_page}} = conn) do
+    page = String.to_integer(current_page)
+
+    if page == 1 do
+      links
+    else
+      [%{"rel" => "prev", "href" => Siren.change_page(conn, page - 1)} | links]
+    end
+  end
+
+  def add_prev(links, _conn), do: links
+
 end
