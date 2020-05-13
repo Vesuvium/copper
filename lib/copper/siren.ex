@@ -54,4 +54,8 @@ defmodule Copper.Siren do
 
   def add_prev(links, _conn), do: links
 
+  def add_self(links, conn) do
+    [%{"rel" => "self", "href" => Conn.request_url(conn)} | links]
+  end
+
 end
