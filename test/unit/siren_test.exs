@@ -19,12 +19,17 @@ defmodule CopperTest.Siren do
   test "change_page/2" do
     url = %{query: "page=1"}
 
-    dummy URI, [{"encode_query", "query"}, {"decode_query", %{}}] do
+    dummy URI, [
+      {"encode_query", "query"},
+      {"decode_query", %{}},
+      {"to_string", :string}
+    ] do
       dummy Siren, [{"parse_uri", url}] do
-        assert Siren.change_page(:conn, 2) == %{query: "query"}
+        assert Siren.change_page(:conn, 2) == :string
         assert called(Siren.parse_uri(:conn))
         assert called(URI.decode_query("page=1"))
         assert called(URI.encode_query(%{"page" => 2}))
+        assert called(URI.to_string(%{query: "query"}))
       end
     end
   end
