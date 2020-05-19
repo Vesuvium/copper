@@ -40,6 +40,18 @@ defmodule Copper.Siren do
   end
 
   @doc """
+  Adds a link to the last page
+  """
+  def add_last(links, conn, count) do
+    items =
+      Map.get(conn.query_params, "items", @items_per_page)
+      |> String.to_integer()
+
+    last_page = ceil(count / items)
+    [%{"rel" => "last", "href" => Siren.change_page(conn, last_page)} | links]
+  end
+
+  @doc """
   Adds a link to the previous page, if it's not the first page.
   """
   def add_prev(links, %{query_params: %{"page" => current_page}} = conn) do
