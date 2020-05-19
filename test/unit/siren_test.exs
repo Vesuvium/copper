@@ -101,12 +101,14 @@ defmodule CopperTest.Siren do
     dummy Siren, [
       {"add_self/2", :self},
       {"add_prev/2", :prev},
-      {"add_next/3", :next}
+      {"add_next/3", :next},
+      {"add_last/3", :last}
     ] do
-      assert Siren.links(:conn, :count) == :next
+      assert Siren.links(:conn, :count) == :last
       assert Siren.add_self([], :conn)
       assert called(Siren.add_prev(:self, :conn))
       assert called(Siren.add_next(:prev, :conn, :count))
+      assert called(Siren.add_last(:next, :conn, :count))
     end
   end
 

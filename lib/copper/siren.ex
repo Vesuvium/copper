@@ -75,6 +75,7 @@ defmodule Copper.Siren do
     |> Siren.add_self(conn)
     |> Siren.add_prev(conn)
     |> Siren.add_next(conn, count)
+    |> Siren.add_last(conn, count)
   end
 
   @doc """
