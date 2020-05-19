@@ -3,15 +3,6 @@ defmodule Copper.Siren do
   alias Copper.Utils
   alias Plug.Conn
 
-  @doc """
-  Merges two uris into one.
-  """
-  def merge_uris(lhs, rhs) do
-    lhs
-    |> URI.merge(rhs)
-    |> URI.to_string()
-  end
-
   def parse_uri(conn), do: conn |> Conn.request_url() |> URI.parse()
 
   @doc """

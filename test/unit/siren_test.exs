@@ -6,14 +6,6 @@ defmodule CopperTest.Siren do
   alias Copper.Utils
   alias Plug.Conn
 
-  test "merge_uris/2" do
-    dummy URI, [{"merge/2", :merge}, {"to_string", :uri}] do
-      assert Siren.merge_uris("lhs", "rhs") == :uri
-      assert called(URI.merge("lhs", "rhs"))
-      assert called(URI.to_string(:merge))
-    end
-  end
-
   test "parse_uri/1" do
     dummy Conn, [{"request_url", :url}] do
       dummy URI, [{"parse", :parsed}] do
