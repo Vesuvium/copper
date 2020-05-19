@@ -1,8 +1,7 @@
 defmodule Copper.Siren do
   alias Copper.Siren
+  alias Copper.Utils
   alias Plug.Conn
-
-  @items_per_page Application.get_env(:copper, :items_per_page, 20)
 
   @doc """
   Merges two uris into one.
@@ -26,11 +25,8 @@ defmodule Copper.Siren do
   Adds a link to the next page, if it's not the last page.
   """
   def add_next(links, conn, count) do
-    page = Map.get(conn.query_params, "page", "1") |> String.to_integer()
-
-    items =
-      Map.get(conn.query_params, "items", @items_per_page)
-      |> String.to_integer()
+    page = Utils.get_page(conn)
+    items = Utils.get_items(conn)
 
     if page * items < count do
       [%{"rel" => "next", "href" => Siren.change_page(conn, page + 1)} | links]
@@ -43,11 +39,7 @@ defmodule Copper.Siren do
   Adds a link to the last page
   """
   def add_last(links, conn, count) do
-    items =
-      Map.get(conn.query_params, "items", @items_per_page)
-      |> String.to_integer()
-
-    last_page = ceil(count / items)
+    last_page = ceil(count / Utils.get_items(conn))
     [%{"rel" => "last", "href" => Siren.change_page(conn, last_page)} | links]
   end
 
