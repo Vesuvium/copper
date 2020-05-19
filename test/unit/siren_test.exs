@@ -25,14 +25,14 @@ defmodule CopperTest.Siren do
   end
 
   test "change_page/2" do
-    dummy Conn, [{"request_url", "url"}] do
-      dummy URI, [{"encode_query", "query"}] do
-        dummy Siren, [{"merge_uris/2", :merge}] do
-          assert Siren.change_page(:conn, 2) == :merge
-          assert called(Conn.request_url(:conn))
-          assert called(URI.encode_query(%{"page" => 2}))
-          assert called(Siren.merge_uris("url", "?query"))
-        end
+    url = %{query: "page=1"}
+
+    dummy URI, [{"encode_query", "query"}, {"decode_query", %{}}] do
+      dummy Siren, [{"parse_uri", url}] do
+        assert Siren.change_page(:conn, 2) == %{query: "query"}
+        assert called(Siren.parse_uri(:conn))
+        assert called(URI.decode_query("page=1"))
+        assert called(URI.encode_query(%{"page" => 2}))
       end
     end
   end

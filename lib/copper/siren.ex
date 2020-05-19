@@ -18,9 +18,16 @@ defmodule Copper.Siren do
   Creates an updated uri to a new page.
   """
   def change_page(conn, new_page) do
-    conn
-    |> Conn.request_url()
-    |> Siren.merge_uris("?" <> URI.encode_query(%{"page" => new_page}))
+    url = Siren.parse_uri(conn)
+
+    query =
+      url
+      |> Map.get(:query)
+      |> URI.decode_query()
+      |> Map.put("page", new_page)
+      |> URI.encode_query()
+
+    Map.put(url, :query, query)
   end
 
   @doc """
