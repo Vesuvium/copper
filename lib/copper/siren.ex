@@ -18,7 +18,9 @@ defmodule Copper.Siren do
       |> Map.put("page", new_page)
       |> URI.encode_query()
 
-    Map.put(url, :query, query)
+    url
+    |> Map.put(:query, query)
+    |> URI.to_string()
   end
 
   @doc """
