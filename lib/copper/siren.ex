@@ -5,6 +5,9 @@ defmodule Copper.Siren do
 
   def parse_uri(conn), do: conn |> Conn.request_url() |> URI.parse()
 
+  def decode_query(%{query: nil}), do: %{}
+  def decode_query(url), do: url |> Map.get(:query) |> URI.decode_query()
+
   @doc """
   Creates an updated uri to a new page.
   """
