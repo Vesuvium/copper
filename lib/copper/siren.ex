@@ -12,6 +12,8 @@ defmodule Copper.Siren do
     |> URI.to_string()
   end
 
+  def parse_uri(conn), do: conn |> Conn.request_url() |> URI.parse()
+
   @doc """
   Creates an updated uri to a new page.
   """

@@ -14,6 +14,16 @@ defmodule CopperTest.Siren do
     end
   end
 
+  test "parse_uri/1" do
+    dummy Conn, [{"request_url", :url}] do
+      dummy URI, [{"parse", :parsed}] do
+        assert Siren.parse_uri(:conn) == :parsed
+        assert called(Conn.request_url(:conn))
+        assert called(URI.parse(:url))
+      end
+    end
+  end
+
   test "change_page/2" do
     dummy Conn, [{"request_url", "url"}] do
       dummy URI, [{"encode_query", "query"}] do
