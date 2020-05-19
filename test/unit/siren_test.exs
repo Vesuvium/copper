@@ -16,6 +16,17 @@ defmodule CopperTest.Siren do
     end
   end
 
+  test "decode_query/1" do
+    dummy URI, [{"decode_query", :query}] do
+      assert Siren.decode_query(%{query: "x=value"}) == :query
+      assert called(URI.decode_query("x=value"))
+    end
+  end
+
+  test "decode_query/1 when the url has none" do
+    assert Siren.decode_query(%{query: nil}) == %{}
+  end
+
   test "change_page/2" do
     url = %{query: "page=1"}
 
