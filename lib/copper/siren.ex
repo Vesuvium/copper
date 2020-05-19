@@ -2,7 +2,7 @@ defmodule Copper.Siren do
   alias Copper.Siren
   alias Plug.Conn
 
-  @items_per_page Application.get_env(:copper, :items_per_page)
+  @items_per_page Application.get_env(:copper, :items_per_page, 20)
 
   @doc """
   Merges two uris into one.
