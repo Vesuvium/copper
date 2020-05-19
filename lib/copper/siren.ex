@@ -16,8 +16,7 @@ defmodule Copper.Siren do
 
     query =
       url
-      |> Map.get(:query)
-      |> URI.decode_query()
+      |> Siren.decode_query()
       |> Map.put("page", new_page)
       |> URI.encode_query()
 
