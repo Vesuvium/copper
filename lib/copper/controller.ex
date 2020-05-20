@@ -17,6 +17,8 @@ defmodule Copper.Controller do
   @callback delete(host :: String.t(), id :: String.t()) ::
               {integer(), nil | Query.CastError.t()}
 
+  @optional_callbacks new: 2, get: 2, by_id: 2, edit: 3, delete: 2
+
   defmacro __using__([]) do
     quote do
       alias unquote(ModuleUtils.slice_replace(__CALLER__.module, "Repo"))
