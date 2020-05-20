@@ -66,10 +66,15 @@ defmodule Copper.Siren do
     [%{"rel" => "self", "href" => Conn.request_url(conn)} | links]
   end
 
+  def add_first(links, conn) do
+    [%{"rel" => "first", "href" => Siren.change_page(conn, 1)} | links]
+  end
+
   def links(conn, count) do
     []
     |> Siren.add_self(conn)
     |> Siren.add_prev(conn)
+    |> Siren.add_first(conn)
     |> Siren.add_next(conn, count)
     |> Siren.add_last(conn, count)
   end

@@ -102,17 +102,28 @@ defmodule CopperTest.Siren do
     end
   end
 
+  test "add_first/2" do
+    expected = [%{"rel" => "first", "href" => :page}]
+
+    dummy Siren, [{"change_page/2", :page}] do
+      assert Siren.add_first([], :conn) == expected
+      assert called(Siren.change_page(:conn, 1))
+    end
+  end
+
   test "links/2" do
     dummy Siren, [
       {"add_self/2", :self},
       {"add_prev/2", :prev},
+      {"add_first/2", :first},
       {"add_next/3", :next},
       {"add_last/3", :last}
     ] do
       assert Siren.links(:conn, :count) == :last
       assert Siren.add_self([], :conn)
       assert called(Siren.add_prev(:self, :conn))
-      assert called(Siren.add_next(:prev, :conn, :count))
+      assert called(Siren.add_first(:prev, :conn))
+      assert called(Siren.add_next(:first, :conn, :count))
       assert called(Siren.add_last(:next, :conn, :count))
     end
   end
