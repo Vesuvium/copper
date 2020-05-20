@@ -7,6 +7,11 @@ defmodule Copper.Schema do
 
   @callback get(host :: String.t(), params :: %{}) :: [Schema.t()]
 
+  @doc """
+  Used to perform count queries.
+  """
+  @callback get_count(user :: String.t(), params :: %{}) :: [Schema.t()]
+
   @callback by_id(host :: String.t(), id :: String.t()) ::
               {:ok, Schema.t()} | {:error, Query.CastError.t()}
 
@@ -16,7 +21,7 @@ defmodule Copper.Schema do
   @callback delete(host :: String.t(), id :: String.t()) ::
               {integer(), nil | Query.CastError.t()}
 
-  @optional_callbacks new: 2, get: 2, by_id: 2, edit: 3, delete: 2
+  @optional_callbacks new: 2, get: 2, get_count: 2, by_id: 2, edit: 3, delete: 2
 
   defmacro __using__([]) do
     quote do
