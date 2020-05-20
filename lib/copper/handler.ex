@@ -13,6 +13,8 @@ defmodule Copper.Handler do
 
   @callback delete(conn :: Conn.t(), id :: String.t()) :: Conn.t() | no_return
 
+  @optional_callbacks get: 1, new: 1, show: 2, edit: 2, delete: 2
+
   def send_json(conn, status, payload) do
     conn
     |> Conn.put_resp_content_type("application/json")
