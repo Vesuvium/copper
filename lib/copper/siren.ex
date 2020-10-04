@@ -33,7 +33,10 @@ defmodule Copper.Siren do
     items = Utils.get_items(conn)
 
     if page * items < count do
-      [%{"rel" => "next", "href" => Siren.change_page(conn, page + 1)} | links]
+      [
+        %{"rel" => ["next"], "href" => Siren.change_page(conn, page + 1)}
+        | links
+      ]
     else
       links
     end
@@ -44,7 +47,7 @@ defmodule Copper.Siren do
   """
   def add_last(links, conn, count) do
     last_page = ceil(count / Utils.get_items(conn))
-    [%{"rel" => "last", "href" => Siren.change_page(conn, last_page)} | links]
+    [%{"rel" => ["last"], "href" => Siren.change_page(conn, last_page)} | links]
   end
 
   @doc """
@@ -56,18 +59,21 @@ defmodule Copper.Siren do
     if page == 1 do
       links
     else
-      [%{"rel" => "prev", "href" => Siren.change_page(conn, page - 1)} | links]
+      [
+        %{"rel" => ["prev"], "href" => Siren.change_page(conn, page - 1)}
+        | links
+      ]
     end
   end
 
   def add_prev(links, _conn), do: links
 
   def add_self(links, conn) do
-    [%{"rel" => "self", "href" => Conn.request_url(conn)} | links]
+    [%{"rel" => ["self"], "href" => Conn.request_url(conn)} | links]
   end
 
   def add_first(links, conn) do
-    [%{"rel" => "first", "href" => Siren.change_page(conn, 1)} | links]
+    [%{"rel" => ["first"], "href" => Siren.change_page(conn, 1)} | links]
   end
 
   def links(conn, count) do
