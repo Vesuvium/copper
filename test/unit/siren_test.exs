@@ -27,6 +27,10 @@ defmodule CopperTest.Siren do
     assert Siren.decode_query(%{query: nil}) == %{}
   end
 
+  test "link/2" do
+    assert Siren.link("type", "href") == %{rel: ["type"], href: "href"}
+  end
+
   test "change_page/2" do
     url = %{query: "page=1"}
 
@@ -42,14 +46,13 @@ defmodule CopperTest.Siren do
   end
 
   test "add_next/3" do
-    expected = [%{rel: ["next"], href: :page}]
-
     dummy Utils, [{"get_page", 2}, {"get_items", 20}] do
-      dummy Siren, [{"change_page/2", :page}] do
-        assert Siren.add_next([], :conn, 100) == expected
+      dummy Siren, [{"change_page/2", :page}, {"link/2", :link}] do
+        assert Siren.add_next([], :conn, 100) == [:link]
         assert called(Utils.get_page(:conn))
         assert called(Utils.get_items(:conn))
         assert called(Siren.change_page(:conn, 3))
+        assert called(Siren.link("next", :page))
       end
     end
   end
@@ -68,13 +71,13 @@ defmodule CopperTest.Siren do
 
   test "add_last/3" do
     conn = %{query_params: %{}}
-    expected = [%{rel: ["last"], href: :page}]
 
     dummy Utils, [{"get_items", 20}] do
-      dummy Siren, [{"change_page/2", :page}] do
-        assert Siren.add_last([], conn, 40) == expected
+      dummy Siren, [{"change_page/2", :page}, {"link/2", :link}] do
+        assert Siren.add_last([], conn, 40) == [:link]
         assert called(Utils.get_items(conn))
         assert called(Siren.change_page(conn, 2))
+        assert called(Siren.link("last", :page))
       end
     end
   end
@@ -82,9 +85,10 @@ defmodule CopperTest.Siren do
   test "add_prev/2" do
     conn = %{query_params: %{"page" => "2"}}
 
-    dummy Siren, [{"change_page/2", :page}] do
-      assert Siren.add_prev([], conn) == [%{rel: ["prev"], href: :page}]
+    dummy Siren, [{"change_page/2", :page}, {"link/2", :link}] do
+      assert Siren.add_prev([], conn) == [:link]
       assert called(Siren.change_page(conn, 1))
+      assert called(Siren.link("prev", :page))
     end
   end
 
@@ -98,16 +102,18 @@ defmodule CopperTest.Siren do
 
   test "add_self/2" do
     dummy Conn, [{"request_url", :url}] do
-      assert Siren.add_self([], :conn) == [%{rel: ["self"], href: :url}]
+      dummy Siren, [{"link/2", :link}] do
+        assert Siren.add_self([], :conn) == [:link]
+        assert called(Siren.link("self", :url))
+      end
     end
   end
 
   test "add_first/2" do
-    expected = [%{rel: ["first"], href: :page}]
-
-    dummy Siren, [{"change_page/2", :page}] do
-      assert Siren.add_first([], :conn) == expected
+    dummy Siren, [{"change_page/2", :page}, {"link/2", :link}] do
+      assert Siren.add_first([], :conn) == [:link]
       assert called(Siren.change_page(:conn, 1))
+      assert called(Siren.link("first", :page))
     end
   end
 

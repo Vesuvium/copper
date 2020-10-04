@@ -8,6 +8,8 @@ defmodule Copper.Siren do
   def decode_query(%{query: nil}), do: %{}
   def decode_query(url), do: url |> Map.get(:query) |> URI.decode_query()
 
+  def link(rel, href), do: %{rel: [rel], href: href}
+
   @doc """
   Creates an updated uri to a new page.
   """
@@ -33,7 +35,7 @@ defmodule Copper.Siren do
     items = Utils.get_items(conn)
 
     if page * items < count do
-      [%{rel: ["next"], href: Siren.change_page(conn, page + 1)} | links]
+      [Siren.link("next", Siren.change_page(conn, page + 1)) | links]
     else
       links
     end
@@ -44,7 +46,7 @@ defmodule Copper.Siren do
   """
   def add_last(links, conn, count) do
     last_page = ceil(count / Utils.get_items(conn))
-    [%{rel: ["last"], href: Siren.change_page(conn, last_page)} | links]
+    [Siren.link("last", Siren.change_page(conn, last_page)) | links]
   end
 
   @doc """
@@ -56,18 +58,18 @@ defmodule Copper.Siren do
     if page == 1 do
       links
     else
-      [%{rel: ["prev"], href: Siren.change_page(conn, page - 1)} | links]
+      [Siren.link("prev", Siren.change_page(conn, page - 1)) | links]
     end
   end
 
   def add_prev(links, _conn), do: links
 
   def add_self(links, conn) do
-    [%{rel: ["self"], href: Conn.request_url(conn)} | links]
+    [Siren.link("self", Conn.request_url(conn)) | links]
   end
 
   def add_first(links, conn) do
-    [%{rel: ["first"], href: Siren.change_page(conn, 1)} | links]
+    [Siren.link("first", Siren.change_page(conn, 1)) | links]
   end
 
   def links(conn, count) do
