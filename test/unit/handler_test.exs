@@ -103,6 +103,15 @@ defmodule CopperTest.Handler do
     end
   end
 
+  test "send_500/1" do
+    message = "An unknown internal error occured"
+
+    dummy Handler, [{"send_message/3", :resp}] do
+      assert Handler.send_500(:conn) == :resp
+      assert called(Handler.send_message(:conn, 500, message))
+    end
+  end
+
   test "send_501/1" do
     message = "This endpoint is not implemented yet"
 
