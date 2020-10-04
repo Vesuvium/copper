@@ -42,7 +42,7 @@ defmodule CopperTest.Siren do
   end
 
   test "add_next/3" do
-    expected = [%{"rel" => "next", "href" => :page}]
+    expected = [%{"rel" => ["next"], "href" => :page}]
 
     dummy Utils, [{"get_page", 2}, {"get_items", 20}] do
       dummy Siren, [{"change_page/2", :page}] do
@@ -68,7 +68,7 @@ defmodule CopperTest.Siren do
 
   test "add_last/3" do
     conn = %{query_params: %{}}
-    expected = [%{"rel" => "last", "href" => :page}]
+    expected = [%{"rel" => ["last"], "href" => :page}]
 
     dummy Utils, [{"get_items", 20}] do
       dummy Siren, [{"change_page/2", :page}] do
@@ -83,7 +83,7 @@ defmodule CopperTest.Siren do
     conn = %{query_params: %{"page" => "2"}}
 
     dummy Siren, [{"change_page/2", :page}] do
-      assert Siren.add_prev([], conn) == [%{"rel" => "prev", "href" => :page}]
+      assert Siren.add_prev([], conn) == [%{"rel" => ["prev"], "href" => :page}]
       assert called(Siren.change_page(conn, 1))
     end
   end
@@ -98,12 +98,12 @@ defmodule CopperTest.Siren do
 
   test "add_self/2" do
     dummy Conn, [{"request_url", :url}] do
-      assert Siren.add_self([], :conn) == [%{"rel" => "self", "href" => :url}]
+      assert Siren.add_self([], :conn) == [%{"rel" => ["self"], "href" => :url}]
     end
   end
 
   test "add_first/2" do
-    expected = [%{"rel" => "first", "href" => :page}]
+    expected = [%{"rel" => ["first"], "href" => :page}]
 
     dummy Siren, [{"change_page/2", :page}] do
       assert Siren.add_first([], :conn) == expected
