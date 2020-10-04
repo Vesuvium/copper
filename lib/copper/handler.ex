@@ -57,6 +57,10 @@ defmodule Copper.Handler do
     Handler.send_message(conn, 404, "The requested resource does not exist")
   end
 
+  def send_500(conn) do
+    Handler.send_message(conn, 500, "An unknown internal error occured")
+  end
+
   def send_501(conn) do
     Handler.send_message(conn, 501, "This endpoint is not implemented yet")
   end
