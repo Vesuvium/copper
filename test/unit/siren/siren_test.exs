@@ -3,7 +3,7 @@ defmodule CopperTest.Siren do
   import Dummy
 
   alias Copper.Siren
-  alias Copper.Siren.Links
+  alias Copper.Siren.{Errors, Links}
 
   test "links/2" do
     dummy Links, [
@@ -37,6 +37,34 @@ defmodule CopperTest.Siren do
     dummy Links, [{"add_self/2", [:self]}] do
       assert Siren.encode(:conn, :payload) == expected
       assert called(Links.add_self([], :conn))
+    end
+  end
+
+  test "error/2" do
+    summary =
+      "The request could not be processed because of an unspecified error"
+
+    dummy Errors, [{"parse", :parse}] do
+      result = Siren.error(:code, :errors)
+      assert result[:class] == ["error"]
+      assert result[:properties][:code] == :code
+      assert result[:properties][:summary] == summary
+      assert result[:properties][:errors] == :parse
+      assert called(Errors.parse(:errors))
+    end
+  end
+
+  test "error/3 with class option" do
+    dummy Errors, [{"parse", :parse}] do
+      result = Siren.error(:code, :errors, class: "custom")
+      assert result[:class] == ["custom"]
+    end
+  end
+
+  test "error/3 with summary option" do
+    dummy Errors, [{"parse", :parse}] do
+      result = Siren.error(:code, :errors, summary: "custom")
+      assert result[:properties][:summary] == "custom"
     end
   end
 end
