@@ -7,15 +7,25 @@ defmodule CopperTest.Handler do
   import Dummy
 
   test "send_json/3" do
-    dummy Conn, [
-      {"send_resp/3", :resp},
-      {"put_resp_content_type/2", :content_type}
-    ] do
+    dummy Conn, [{"send_resp/3", :resp}, {"put_resp_content_type/2", :type}] do
       dummy Jason, [{"encode!", :json}] do
         assert Handler.send_json(:conn, 200, %{}) == :resp
         assert called(Conn.put_resp_content_type(:conn, "application/json"))
         assert called(Jason.encode!(%{}))
-        assert called(Conn.send_resp(:content_type, 200, :json))
+        assert called(Conn.send_resp(:type, 200, :json))
+      end
+    end
+  end
+
+  test "send_siren/3" do
+    siren = "application/vnd.siren+json"
+
+    dummy Conn, [{"send_resp/3", :resp}, {"put_resp_content_type/2", :type}] do
+      dummy Jason, [{"encode!", :json}] do
+        assert Handler.send_siren(:conn, 200, %{}) == :resp
+        assert called(Conn.put_resp_content_type(:conn, siren))
+        assert called(Jason.encode!(%{}))
+        assert called(Conn.send_resp(:type, 200, :json))
       end
     end
   end

@@ -21,6 +21,12 @@ defmodule Copper.Handler do
     |> Conn.send_resp(status, Jason.encode!(payload))
   end
 
+  def send_siren(conn, status, payload) do
+    conn
+    |> Conn.put_resp_content_type("application/vnd.siren+json")
+    |> Conn.send_resp(status, Jason.encode!(payload))
+  end
+
   def send_message(conn, status, message) do
     Handler.send_json(conn, status, %{:message => message})
   end
