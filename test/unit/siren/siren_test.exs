@@ -40,6 +40,13 @@ defmodule CopperTest.Siren do
     end
   end
 
+  test "error/1 (404)" do
+    result = Siren.error(404)
+    assert result[:class] == ["error", "not-found"]
+    assert result[:properties][:code] == 404
+    assert result[:properties][:summary] == "This resource does not exist."
+  end
+
   test "error/2" do
     summary =
       "The request could not be processed because of an unspecified error"

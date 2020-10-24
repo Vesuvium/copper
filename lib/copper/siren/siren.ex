@@ -27,6 +27,13 @@ defmodule Copper.Siren do
     %{properties: payload, links: Links.add_self([], conn)}
   end
 
+  def error(404) do
+    %{
+      class: ["error", "not-found"],
+      properties: %{code: 404, summary: "This resource does not exist."}
+    }
+  end
+
   def error(code, errors, opts \\ []) do
     class = Keyword.get(opts, :class, "error")
     summary = Keyword.get(opts, :summary, @summary)
